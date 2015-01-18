@@ -12,10 +12,19 @@ namespace Codice.CmdRunner
 
     internal class BaseCmdRunner
     {
+		private Hashtable mEnvironmentVariables = null;
+		private static IConsoleWriter mConsoleWriter = null;
+		internal Process mCmdProc = null;
+
+		/// <summary>
+		/// Inits the console.
+		/// </summary>
+		/// <param name="writer">Writer.</param>
         public void InitConsole(IConsoleWriter writer)
         {
             mConsoleWriter = writer;
         }
+
 
         public int InternalExecuteCommand(string command, string path)
         {
@@ -35,9 +44,12 @@ namespace Codice.CmdRunner
             }
         }
 
-        public int InternalExecuteCommand(
-            string command, string path, string input, out string output, out string error,
-            bool bUseCmShell)
+        public int InternalExecuteCommand(string command, 
+		                                  string path, 
+		                                  string input, 
+		                                  out string output, 
+		                                  out string error, 
+		                                  bool bUseCmShell)
         {
             output = string.Empty;
             error = string.Empty;
@@ -124,27 +136,27 @@ namespace Codice.CmdRunner
             mEnvironmentVariables = variables;
         }
 
-        internal virtual int RunAndWait(string cmd, string workingdir, out string output,
-            out string error, bool bUseCmShell)
+        internal virtual int RunAndWait(string cmd, string workingdir, out string output, 
+		                                out string error, bool bUseCmShell)
         {
             return RunAndWaitWithInput(cmd, workingdir, null, out output, out error);
         }
 
-        internal virtual int RunAndWait(string cmd, string workingdir, out string output,
-            out string error)
+        internal virtual int RunAndWait(string cmd, string workingdir, out string output, 
+		                                out string error)
         {
             return RunAndWaitWithInput(cmd, workingdir, null, out output, out error);
         }
 
-        internal virtual int RunAndWaitWithInput(string cmd, string workingdir, string input,
-            out string output, out string error)
+        internal virtual int RunAndWaitWithInput(string cmd, string workingdir, string input, 
+		                                         out string output, out string error)
         {
             Process p = InternalRun(cmd, workingdir, true);
             try
             {
                 if (input != null && input != string.Empty)
                 {
-                    if (!PlatformIdentifier.IsWindows())
+                    if (!PlatformIdentifier.isWindows)
                     {
                         byte[] buffer = System.Text.Encoding.UTF8.GetBytes(input);
                         p.StandardInput.BaseStream.Write(buffer, 0, buffer.Length);
@@ -183,6 +195,7 @@ namespace Codice.CmdRunner
             }
         }
 
+		[Obsolete("Use class PlatformIdentifier")]
         private bool IsWindows()
         {
             switch (Environment.OSVersion.Platform)
@@ -197,7 +210,7 @@ namespace Codice.CmdRunner
 
         private string EscapeArgs(string args)
         {
-            if (IsWindows())
+            if (PlatformIdentifier.isWindows)
                 return args;
             else
                 return args.Replace("#", "\\#");
@@ -227,8 +240,6 @@ namespace Codice.CmdRunner
             WriteLine(string.Format("Command {0} failed with error code {1}", command, result));
         }
 
-        private Hashtable mEnvironmentVariables = null;
-        private static IConsoleWriter mConsoleWriter = null;
-        internal Process mCmdProc = null;
+        
     }
 }

@@ -6,6 +6,9 @@ namespace Codice.CmdRunner
 {
     public class CmdRunner
     {
+		private static bool bSetBotMode = false;
+		private static CodiceCmdRunner runner = new CodiceCmdRunner();
+
         public static void InitConsole(IConsoleWriter writer)
         {
             runner.InitConsole(writer);
@@ -116,7 +119,6 @@ namespace Codice.CmdRunner
             return runner.RunAndWait(cmd, workingdir, out output, out error);
         }
 
-        private static bool bSetBotMode = false;
-        private static CodiceCmdRunner runner = new CodiceCmdRunner();
+        
     }
 }

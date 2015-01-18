@@ -15,6 +15,9 @@ namespace Codice.CmdRunner
 
     public class LaunchCommand
     {
+		private static LaunchCommand mInstance = null;
+		private static string mExecutablePath = "cm";
+
         public static void SetExecutablePath(string executablepath)
         {
             mExecutablePath = executablepath;
@@ -81,8 +84,7 @@ namespace Codice.CmdRunner
                 mConfig.CmShellComand = string.Empty;
         }
 
-        private static LaunchCommand mInstance = null;
-        private static string mExecutablePath = "cm";
+        
     }
 
 }

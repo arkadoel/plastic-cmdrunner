@@ -5,14 +5,23 @@ namespace sampleplasticapi
 {
     internal class CliArgumentParser
     {
+		private bool mbIsCorrect = false;
+
+		private string mRepositoryName = string.Empty;
+		private string mWorkspaceName = string.Empty;
+
+		private Dictionary<string, object> mOptions = new Dictionary<string, object>();
+
+		private const int NUMBER_OF_MANDATORY_ARGS = 2;
+
+		internal bool IsCorrect { get { return mbIsCorrect; } }
+		internal string RepositoryName { get { return mRepositoryName; } }
+		internal string WorkspaceName { get  { return mWorkspaceName; } }
+
         internal CliArgumentParser(string[] args)
         {
             Parse(args);
-        }
-
-        internal bool IsCorrect { get { return mbIsCorrect; } }
-        internal string RepositoryName { get { return mRepositoryName; } }
-        internal string WorkspaceName { get  { return mWorkspaceName; } }
+        }        
 
         internal bool HasOption(string option)
         {
@@ -91,14 +100,7 @@ namespace sampleplasticapi
             mOptions.Add(arg.Substring(2), true);
         }
 
-        private bool mbIsCorrect = false;
-
-        private string mRepositoryName = string.Empty;
-        private string mWorkspaceName = string.Empty;
-
-        private Dictionary<string, object> mOptions = new Dictionary<string, object>();
-
-        private const int NUMBER_OF_MANDATORY_ARGS = 2;
+        
     }
 
     internal static class CliOptions

@@ -7,6 +7,75 @@ namespace sampleplasticapi
 {
     class Program
     {
+		#region "Constants & Variables"
+		private static string mError = string.Empty;
+
+		const int GENERIC_ERROR_CODE = 1;
+		const int WRONG_USAGE_CODE = 2;
+
+		const string HELLO_WORLD_C =
+			@"#include <stdio.h>
+
+int main(int argc, char **argv) {
+    printf(""Hello, world!\n"");
+    return 0;
+}
+";
+        const string SAMPLE_C_CODE =
+@"
+				int my_function(char letter);
+
+		float other_function(int number) {
+			return my_function(number) * 3.1416;
+		}
+
+		int my_function(char letter) {
+			return (int)letter + 10;
+		}
+		";
+
+        const string USAGE =
+@"Usage:
+			sampleplasticapi.exe <repository-name> <workspace-name> [options]
+
+			Description:
+				This command will execute a set of PlasticSCM basic commands in order to
+				illustrate how to build an API taking advantage of how the CLI works.
+
+				Requirements:
+				The local PlasticSCM CLI client (`cm') must be able to connect to a running
+  PlasticSCM server.
+
+Available options:
+  --local: Create the sample workspace under the current directory, instead
+           of under the temporary directory.
+
+Actions:
+  A new repository called <repository-name> will be created on the
+  PlasticSCM server that the client is linked to. A new workspace (called
+  <workspace-name>) pointing to that repository will be created under
+  the temporary directory. It can be created under the current directory
+  by using the '--local' parameter.
+
+  Once the PlasticSCM environment has been set up, this program will create
+  sample contents that will be uploaded into the repository. Some operations
+  will be performed on then, such as renaming, modifying and deleting a file,
+  or labelling a changeset.
+
+  We encourage you to review the repository contents after the execution
+  using the PlasticSCM graphic or command-line interface.
+
+Examples:
+  sampleplasticapi.exe my-repo my-workspace
+  sampleplasticapi.exe new-repo wkLocal --local
+";
+
+		#endregion
+
+		/// <summary>
+		/// The entry point of the program, where the program control starts and ends.
+		/// </summary>
+		/// <param name="args">The command-line arguments.</param>
         public static void Main(string[] args)
         {
             CliArgumentParser cli = new CliArgumentParser(args);
@@ -139,6 +208,10 @@ namespace sampleplasticapi
                 CmdRunner.TerminateShell();
             }
         }
+
+		/// <summary>
+		/// Aborts the process.
+		/// </summary>
         private static void AbortProcess()
         {
             throw new Exception(mError);
@@ -158,68 +231,6 @@ namespace sampleplasticapi
 
             mError = string.Format("File '{0}' should be checked out, but it isn't.", path);
             AbortProcess();
-        }
-
-        private static string mError = string.Empty;
-
-        const int GENERIC_ERROR_CODE = 1;
-        const int WRONG_USAGE_CODE = 2;
-
-        const string HELLO_WORLD_C =
-@"#include <stdio.h>
-
-int main(int argc, char **argv) {
-    printf(""Hello, world!\n"");
-    return 0;
-}
-";
-        const string SAMPLE_C_CODE =
-@"
-int my_function(char letter);
-
-float other_function(int number) {
-    return my_function(number) * 3.1416;
-}
-
-int my_function(char letter) {
-    return (int)letter + 10;
-}
-";
-
-        const string USAGE =
-@"Usage:
-  sampleplasticapi.exe <repository-name> <workspace-name> [options]
-
-Description:
-  This command will execute a set of PlasticSCM basic commands in order to
-  illustrate how to build an API taking advantage of how the CLI works.
-
-Requirements:
-  The local PlasticSCM CLI client (`cm') must be able to connect to a running
-  PlasticSCM server.
-
-Available options:
-  --local: Create the sample workspace under the current directory, instead
-           of under the temporary directory.
-
-Actions:
-  A new repository called <repository-name> will be created on the
-  PlasticSCM server that the client is linked to. A new workspace (called
-  <workspace-name>) pointing to that repository will be created under
-  the temporary directory. It can be created under the current directory
-  by using the '--local' parameter.
-
-  Once the PlasticSCM environment has been set up, this program will create
-  sample contents that will be uploaded into the repository. Some operations
-  will be performed on then, such as renaming, modifying and deleting a file,
-  or labelling a changeset.
-
-  We encourage you to review the repository contents after the execution
-  using the PlasticSCM graphic or command-line interface.
-
-Examples:
-  sampleplasticapi.exe my-repo my-workspace
-  sampleplasticapi.exe new-repo wkLocal --local
-";
+        }        
     }
 }

@@ -7,6 +7,8 @@ namespace sampleplasticapi
 {
     public static class PlasticAPI
     {
+		private static string mWorkingDirectory = string.Empty;
+
         internal static string WorkingDirectory 
         {
             private get
@@ -165,7 +167,7 @@ namespace sampleplasticapi
             return CmdRunner.ExecuteCommandWithStringResult(command, WorkingDirectory);
         }
 
-        private static string mWorkingDirectory = string.Empty;
+        
     }
 }
 

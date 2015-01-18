@@ -8,11 +8,39 @@ namespace Codice.CmdRunner
 {
     internal class CodiceCmdRunner : BaseCmdRunner
     {
-        protected int ReadFileOutputUnix(
-            Process proc,
-            string outputfile,
-            out string output,
-            out string error)
+		//CONSTANTS
+		protected bool USE_FILE_COMMUNICATION = true; // communicate with cm shell using a file
+
+		private const int SECOND = 1000;
+		private const int MINUTE = 60 * SECOND;
+
+		private const int DEFAULT_SPIN_TIME = 10 * SECOND;
+		private const int DEFAULT_MAX_WAIT_TIME = 8 * MINUTE;
+		private const int DEFAULT_MAX_WAIT_TIME_ALL = 30 * MINUTE;
+
+		//VARIABLES
+		private int mSpinTime = -1;
+		private int mMaxWaitTime = -1;
+		private int mMaxWaitTimeAll = -1;
+
+		private bool mbTimeOut = true;
+
+		private static string COMMAND_RESULT = "CommandResult";
+
+		delegate string ReadAsync(StreamReader reader);
+
+		/// <summary>
+		/// Reads the file output unix.
+		/// </summary>
+		/// <returns>The file output unix.</returns>
+		/// <param name="proc">Process</param>
+		/// <param name="outputfile">Outputfile.</param>
+		/// <param name="output">Output string by ref</param>
+		/// <param name="error">Error string by ref</param>
+        protected int ReadFileOutputUnix(Process proc, 
+		                                 string outputfile, 
+		                                 out string output, 
+		                                 out string error)
         {
             bool bDone = false;
             int result = 1;
@@ -64,8 +92,18 @@ namespace Codice.CmdRunner
             return result;
         }
 
-        protected int ReadFileOutputWindows(Process proc, string outputfile, out string output,
-            out string error)
+		/// <summary>
+		/// Reads the file output windows.
+		/// </summary>
+		/// <returns>The file output windows.</returns>
+		/// <param name="proc">Proc.</param>
+		/// <param name="outputfile">Outputfile.</param>
+		/// <param name="output">Output.</param>
+		/// <param name="error">Error.</param>
+        protected int ReadFileOutputWindows(Process proc, 
+		                                    string outputfile, 
+		                                    out string output, 
+		                                    out string error)
         {
             bool bDone = false;
             int result = 1;
@@ -286,7 +324,7 @@ namespace Codice.CmdRunner
             int result = 0;
 
             if (USE_FILE_COMMUNICATION)
-                if (PlatformIdentifier.IsWindows())
+                if (PlatformIdentifier.isWindows)
                     result = ReadFileOutputWindows(mCmdProc, outputfile,
                         out output, out error);
                 else
@@ -394,23 +432,6 @@ namespace Codice.CmdRunner
             return result;
         }
 
-        protected bool USE_FILE_COMMUNICATION = true; // communicate with cm shell using a file
-
-        private const int DEFAULT_SPIN_TIME = 10 * SECOND;
-        private const int DEFAULT_MAX_WAIT_TIME = 8 * MINUTE;
-        private const int DEFAULT_MAX_WAIT_TIME_ALL = 30 * MINUTE;
-
-        private int mSpinTime = -1;
-        private int mMaxWaitTime = -1;
-        private int mMaxWaitTimeAll = -1;
-
-        const int SECOND = 1000;
-        const int MINUTE = 60 * SECOND;
-
-        private bool mbTimeOut = true;
-
-        private static string COMMAND_RESULT = "CommandResult";
-
-        delegate string ReadAsync(StreamReader reader);
+        
     }
 }
